@@ -4,6 +4,9 @@ struct PokemonListView: View {
     @State private var pokemons: [Pokemon] = []
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var isLoadingMore = false
+    @State private var currentPage = 1
+    @State private var scrollViewHeight: CGFloat = 0
     
     private let columns = [
         GridItem(.adaptive(minimum: 150), spacing: 16)
@@ -25,6 +28,41 @@ struct PokemonListView: View {
                             }
                         }
                         .padding(16)
+                        
+                        if isLoadingMore {
+                            VStack {
+                                ProgressView()
+                                    .padding()
+                                Text("次のポケモンをロード中...")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical)
+                        }
+                        
+                        // スクロール位置検知用の透明なビュー
+                        GeometryReader { geometry in
+                            Color.clear
+                                .preference(key: ScrollOffsetPreferenceKey.self,
+                                          value: geometry.frame(in: .named("scroll")).minY)
+                        }
+                        .frame(height: 20)
+                    }
+                    .background(
+                        GeometryReader { geometry in
+                            Color.clear.onAppear {
+                                scrollViewHeight = geometry.size.height
+                            }
+                        }
+                    )
+                    .coordinateSpace(name: "scroll")
+                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
+                        if offset * 0.8 < scrollViewHeight && !isLoadingMore {
+                            Task {
+                                await loadMorePokemons()
+                            }
+                        }
                     }
                 }
             }
@@ -37,21 +75,51 @@ struct PokemonListView: View {
     
     private func loadPokemons() async {
         isLoading = true
-        errorMessage = nil
+        currentPage = 1
         
         do {
-            // 最初の15件のポケモンを取得
             var loadedPokemons: [Pokemon] = []
-            for id in 1...15 {
+            for id in 1...10 {
                 let pokemon = try await PokemonAPI.shared.searchPokemon(name: String(id))
                 loadedPokemons.append(pokemon)
             }
             pokemons = loadedPokemons
         } catch {
-            errorMessage = "Failed to load Pokemon"
+            self.errorMessage = "Failed to load Pokemon"
         }
         
         isLoading = false
+    }
+    
+    private func loadMorePokemons() async {
+        guard !isLoadingMore else { return }
+        isLoadingMore = true
+        
+        do {
+            let startId = currentPage * 10 + 1
+            let endId = startId + 9
+            
+            print("新しいポケモンをロード中... (ID: \(startId) - \(endId))")
+            
+            for id in startId...endId {
+                let pokemon = try await PokemonAPI.shared.searchPokemon(name: String(id))
+                pokemons.append(pokemon)
+                print("ロード完了: \(pokemon.name) (ID: \(pokemon.id))")
+            }
+            currentPage += 1
+            print("ページ \(currentPage) のロードが完了しました。現在のポケモン数: \(pokemons.count)")
+        } catch {
+            print("Failed to load more Pokemon: \(error)")
+        }
+        
+        isLoadingMore = false
+    }
+}
+
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 
