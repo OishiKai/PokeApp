@@ -25,4 +25,4 @@ struct Pokemon: Codable, Identifiable {
             case typeInfo = "type"
         }
     }
-} 
+}

@@ -1,4 +1,5 @@
 import SwiftUI
+import Foundation
 
 struct PokemonListView: View {
     @State private var pokemons: [Pokemon] = []
@@ -7,10 +8,16 @@ struct PokemonListView: View {
     @State private var isLoadingMore = false
     @State private var currentPage = 1
     @State private var scrollViewHeight: CGFloat = 0
+    @AppStorage("itemsPerPage") private var itemsPerPage = 10
+    @AppStorage("selectedPokedex") private var selectedPokedex = 0
     
     private let columns = [
         GridItem(.adaptive(minimum: 150), spacing: 16)
     ]
+    
+    private var currentPokedex: Pokedex {
+        Pokedex.find(by: selectedPokedex)
+    }
     
     var body: some View {
         NavigationView {
@@ -43,7 +50,6 @@ struct PokemonListView: View {
                             .padding(.vertical)
                         }
                         
-                        // スクロール位置検知用の透明なビュー
                         GeometryReader { geometry in
                             Color.clear
                                 .preference(key: ScrollOffsetPreferenceKey.self,
@@ -69,7 +75,25 @@ struct PokemonListView: View {
                 }
             }
             .background(Color(uiColor: .systemGroupedBackground))
-            .navigationTitle("Pokedex")
+            .navigationTitle(currentPokedex.name)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Picker("図鑑", selection: $selectedPokedex) {
+                            ForEach(Pokedex.all) { pokedex in
+                                Text(pokedex.name).tag(pokedex.id)
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "book.fill")
+                    }
+                }
+            }
+            .onChange(of: selectedPokedex) { oldValue, newValue in
+                Task {
+                    await loadPokemons()
+                }
+            }
             .task {
                 await loadPokemons()
             }
@@ -79,10 +103,14 @@ struct PokemonListView: View {
     private func loadPokemons() async {
         isLoading = true
         currentPage = 1
+        pokemons.removeAll()
         
         do {
             var loadedPokemons: [Pokemon] = []
-            for id in 1...10 {
+            let startId = currentPokedex.startId
+            let endId = min(startId + itemsPerPage - 1, currentPokedex.endId)
+            
+            for id in startId...endId {
                 let pokemon = try await PokemonAPI.shared.searchPokemon(id: String(id))
                 loadedPokemons.append(pokemon)
             }
@@ -99,8 +127,14 @@ struct PokemonListView: View {
         isLoadingMore = true
         
         do {
-            let startId = currentPage * 10 + 1
-            let endId = startId + 9
+            let startId = currentPokedex.startId + (currentPage * itemsPerPage)
+            let endId = min(startId + itemsPerPage - 1, currentPokedex.endId)
+            
+            // 図鑑の終了IDを超えている場合は読み込みを停止
+            guard startId <= currentPokedex.endId else {
+                isLoadingMore = false
+                return
+            }
             
             for id in startId...endId {
                 let pokemon = try await PokemonAPI.shared.searchPokemon(id: String(id))
