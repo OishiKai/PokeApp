@@ -80,7 +80,7 @@ struct PokemonListView: View {
         do {
             var loadedPokemons: [Pokemon] = []
             for id in 1...10 {
-                let pokemon = try await PokemonAPI.shared.searchPokemon(name: String(id))
+                let pokemon = try await PokemonAPI.shared.searchPokemon(id: String(id))
                 loadedPokemons.append(pokemon)
             }
             pokemons = loadedPokemons
@@ -100,7 +100,7 @@ struct PokemonListView: View {
             let endId = startId + 9
             
             for id in startId...endId {
-                let pokemon = try await PokemonAPI.shared.searchPokemon(name: String(id))
+                let pokemon = try await PokemonAPI.shared.searchPokemon(id: String(id))
                 pokemons.append(pokemon)
             }
             currentPage += 1

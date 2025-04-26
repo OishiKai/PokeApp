@@ -40,7 +40,7 @@ struct PokemonSearchView: View {
         
         Task {
             do {
-                pokemon = try await PokemonAPI.shared.searchPokemon(name: searchText)
+                pokemon = try await PokemonAPI.shared.searchPokemon(id: searchText)
             } catch {
                 errorMessage = "ポケモンが見つかりませんでした"
             }
