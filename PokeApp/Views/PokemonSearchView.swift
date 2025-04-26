@@ -9,21 +9,32 @@ struct PokemonSearchView: View {
     var body: some View {
         NavigationView {
             VStack {
-                SearchBar(text: $searchText, onSubmit: searchPokemon)
-                
                 if isLoading {
                     ProgressView()
                 } else if let error = errorMessage {
                     Text(error)
-                        .foregroundColor(.red)
+                        .foregroundColor(Color(uiColor: .systemRed))
                 } else if let pokemon = pokemon {
                     PokemonDetailView(pokemon: pokemon)
+                } else {
+                    ContentUnavailableView(
+                        "Search Pokemon",
+                        systemImage: "magnifyingglass",
+                        description: Text("Enter Pokemon name or number")
+                    )
                 }
                 
                 Spacer()
             }
-            .padding()
             .navigationTitle("Search Pokemon")
+            .searchable(
+                text: $searchText,
+                placement: .navigationBarDrawer,
+                prompt: "Search Pokemon"
+            )
+            .onSubmit(of: .search) {
+                searchPokemon()
+            }
         }
         .enableInjection()
     }
@@ -42,7 +53,7 @@ struct PokemonSearchView: View {
             do {
                 pokemon = try await PokemonAPI.shared.searchPokemon(id: searchText)
             } catch {
-                errorMessage = "ポケモンが見つかりませんでした"
+                errorMessage = "Pokemon not found"
             }
             isLoading = false
         }

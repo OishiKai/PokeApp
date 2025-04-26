@@ -8,9 +8,10 @@ struct DetailRow: View {
         HStack {
             Text(title)
                 .font(.headline)
-                .foregroundColor(.secondary)
+                .foregroundColor(Color(uiColor: .secondaryLabel))
             Spacer()
             Text(value)
+                .foregroundColor(Color(uiColor: .label))
         }
         .padding(.horizontal)
     }

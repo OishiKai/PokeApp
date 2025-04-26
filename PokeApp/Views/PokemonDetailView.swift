@@ -39,20 +39,21 @@ struct PokemonDetailView: View {
                     ProgressView()
                 } else if let error = errorMessage {
                     Text(error)
-                        .foregroundColor(.red)
+                        .foregroundColor(Color(uiColor: .systemRed))
                 } else if let detail = detail {
                     // 詳細情報
                     VStack(alignment: .leading, spacing: 15) {
                         // 説明文
-                        if let description = detail.flavorTextEntries.first(where: { $0.language.name == "ja" })?.flavorText {
-                            Text(description)
+                        if let description = detail.flavorTextEntries.first(where: { $0.language.name == "en" })?.flavorText {
+                            Text(description.replacingOccurrences(of: "\n", with: " "))
+                                .fixedSize(horizontal: false, vertical: true)
                                 .padding()
-                                .background(Color(.systemGray6))
+                                .background(Color(uiColor: .systemGroupedBackground))
                                 .cornerRadius(10)
                         }
                         
                         // 分類
-                        if let genus = detail.genera.first(where: { $0.language.name == "ja" })?.genus {
+                        if let genus = detail.genera.first(where: { $0.language.name == "en" })?.genus {
                             DetailRow(title: "Category", value: genus)
                         }
                         
@@ -68,12 +69,12 @@ struct PokemonDetailView: View {
                         // 伝説/幻のポケモン
                         if detail.isLegendary {
                             Text("Legendary Pokemon")
-                                .foregroundColor(.orange)
+                                .foregroundColor(Color(uiColor: .systemOrange))
                                 .padding(.top)
                         }
                         if detail.isMythical {
                             Text("Mythical Pokemon")
-                                .foregroundColor(.purple)
+                                .foregroundColor(Color(uiColor: .systemPurple))
                                 .padding(.top)
                         }
                     }

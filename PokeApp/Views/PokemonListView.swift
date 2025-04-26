@@ -19,7 +19,7 @@ struct PokemonListView: View {
                     ProgressView()
                 } else if let error = errorMessage {
                     Text(error)
-                        .foregroundColor(.red)
+                        .foregroundColor(Color(uiColor: .systemRed))
                 } else {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 16) {
@@ -37,7 +37,7 @@ struct PokemonListView: View {
                                     .padding()
                                 Text("Loading more Pokemons...")
                                     .font(.caption)
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(Color(uiColor: .secondaryLabel))
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical)
@@ -68,6 +68,7 @@ struct PokemonListView: View {
                     }
                 }
             }
+            .background(Color(uiColor: .systemGroupedBackground))
             .navigationTitle("Pokedex")
             .task {
                 await loadPokemons()
@@ -137,11 +138,11 @@ struct PokemonGridItem: View {
             
             Text("#\(pokemon.id)")
                 .font(.caption)
-                .foregroundColor(.gray)
+                .foregroundColor(Color(uiColor: .secondaryLabel))
             
             Text(pokemon.name.capitalized)
                 .font(.headline)
-                .foregroundColor(.black)
+                .foregroundColor(Color(uiColor: .label))
             
             HStack {
                 ForEach(pokemon.types, id: \.typeInfo.name) { type in
@@ -157,8 +158,8 @@ struct PokemonGridItem: View {
         }
         .frame(width: 150, height: 150)
         .padding(8)
-        .background(Color.white)
+        .background(Color(uiColor: .secondarySystemGroupedBackground))
         .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .shadow(color: Color(uiColor: .systemFill).opacity(0.1), radius: 5, x: 0, y: 2)
     }
 } 
