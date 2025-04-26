@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
+    @StateObject private var pokemonListViewModel = PokemonListViewModel()
     
     var body: some View {
         TabView {
@@ -21,6 +22,7 @@ struct MainTabView: View {
                 }
         }
         .preferredColorScheme(isDarkMode ? .dark : .light)
+        .environmentObject(pokemonListViewModel)
     }
 }
 

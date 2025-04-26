@@ -1,106 +1,23 @@
 import SwiftUI
 import Foundation
 
-struct PokemonListView: View {
-    @State private var pokemons: [Pokemon] = []
-    @State private var isLoading = false
-    @State private var errorMessage: String?
-    @State private var isLoadingMore = false
-    @State private var currentPage = 1
-    @State private var scrollViewHeight: CGFloat = 0
+@MainActor
+class PokemonListViewModel: ObservableObject {
+    @Published var pokemons: [Pokemon] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
+    @Published var isLoadingMore = false
+    @Published var currentPage = 1
+    @Published var scrollViewHeight: CGFloat = 0
+    
     @AppStorage("itemsPerPage") private var itemsPerPage = 10
     @AppStorage("selectedPokedex") private var selectedPokedex = 0
-    
-    private let columns = [
-        GridItem(.adaptive(minimum: 150), spacing: 16)
-    ]
     
     private var currentPokedex: Pokedex {
         Pokedex.find(by: selectedPokedex)
     }
     
-    var body: some View {
-        NavigationView {
-            VStack {
-                if isLoading {
-                    ProgressView()
-                } else if let error = errorMessage {
-                    Text(error)
-                        .foregroundColor(Color(uiColor: .systemRed))
-                } else {
-                    ScrollView {
-                        LazyVGrid(columns: columns, spacing: 16) {
-                            ForEach(pokemons) { pokemon in
-                                NavigationLink(destination: PokemonDetailView(pokemon: pokemon)) {
-                                    PokemonGridItem(pokemon: pokemon)
-                                }
-                            }
-                        }
-                        .padding(16)
-                        
-                        if isLoadingMore {
-                            VStack {
-                                ProgressView()
-                                    .padding()
-                                Text("Loading more Pokemons...")
-                                    .font(.caption)
-                                    .foregroundColor(Color(uiColor: .secondaryLabel))
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical)
-                        }
-                        
-                        GeometryReader { geometry in
-                            Color.clear
-                                .preference(key: ScrollOffsetPreferenceKey.self,
-                                          value: geometry.frame(in: .named("scroll")).minY)
-                        }
-                        .frame(height: 20)
-                    }
-                    .background(
-                        GeometryReader { geometry in
-                            Color.clear.onAppear {
-                                scrollViewHeight = geometry.size.height
-                            }
-                        }
-                    )
-                    .coordinateSpace(name: "scroll")
-                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
-                        if offset * 0.8 < scrollViewHeight && !isLoadingMore {
-                            Task {
-                                await loadMorePokemons()
-                            }
-                        }
-                    }
-                }
-            }
-            .background(Color(uiColor: .systemGroupedBackground))
-            .navigationTitle(currentPokedex.name)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Menu {
-                        Picker("図鑑", selection: $selectedPokedex) {
-                            ForEach(Pokedex.all) { pokedex in
-                                Text(pokedex.name).tag(pokedex.id)
-                            }
-                        }
-                    } label: {
-                        Image(systemName: "book.fill")
-                    }
-                }
-            }
-            .onChange(of: selectedPokedex) { oldValue, newValue in
-                Task {
-                    await loadPokemons()
-                }
-            }
-            .task {
-                await loadPokemons()
-            }
-        }
-    }
-    
-    private func loadPokemons() async {
+    func loadPokemons() async {
         isLoading = true
         currentPage = 1
         pokemons.removeAll()
@@ -122,7 +39,7 @@ struct PokemonListView: View {
         isLoading = false
     }
     
-    private func loadMorePokemons() async {
+    func loadMorePokemons() async {
         guard !isLoadingMore else { return }
         isLoadingMore = true
         
@@ -130,7 +47,6 @@ struct PokemonListView: View {
             let startId = currentPokedex.startId + (currentPage * itemsPerPage)
             let endId = min(startId + itemsPerPage - 1, currentPokedex.endId)
             
-            // 図鑑の終了IDを超えている場合は読み込みを停止
             guard startId <= currentPokedex.endId else {
                 isLoadingMore = false
                 return
@@ -146,6 +62,121 @@ struct PokemonListView: View {
         }
         
         isLoadingMore = false
+    }
+    
+    func updateSelectedPokedex(_ newValue: Int) {
+        selectedPokedex = newValue
+    }
+    
+    var currentPokedexName: String {
+        currentPokedex.name
+    }
+}
+
+struct PokemonListView: View {
+    @EnvironmentObject private var viewModel: PokemonListViewModel
+    @AppStorage("selectedPokedex") private var selectedPokedex = 0
+    
+    private let columns = [
+        GridItem(.adaptive(minimum: 150), spacing: 16)
+    ]
+    
+    private var currentPokedex: Pokedex {
+        Pokedex.find(by: selectedPokedex)
+    }
+    
+    var body: some View {
+        NavigationStack {
+            PokemonListContent()
+                .navigationTitle(viewModel.currentPokedexName)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu {
+                            Picker("図鑑", selection: $selectedPokedex) {
+                                ForEach(Pokedex.all) { pokedex in
+                                    Text(pokedex.name).tag(pokedex.id)
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "book.fill")
+                        }
+                    }
+                }
+        }
+        .onChange(of: selectedPokedex) { oldValue, newValue in
+            viewModel.updateSelectedPokedex(newValue)
+            Task {
+                await viewModel.loadPokemons()
+            }
+        }
+        .task {
+            await viewModel.loadPokemons()
+        }
+    }
+}
+
+private struct PokemonListContent: View {
+    @EnvironmentObject private var viewModel: PokemonListViewModel
+    
+    private let columns = [
+        GridItem(.adaptive(minimum: 150), spacing: 16)
+    ]
+    
+    var body: some View {
+        VStack {
+            if viewModel.isLoading {
+                ProgressView()
+            } else if let error = viewModel.errorMessage {
+                Text(error)
+                    .foregroundColor(Color(uiColor: .systemRed))
+            } else {
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        ForEach(viewModel.pokemons) { pokemon in
+                            NavigationLink(destination: PokemonDetailView(pokemon: pokemon)) {
+                                PokemonGridItem(pokemon: pokemon)
+                            }
+                        }
+                    }
+                    .padding(16)
+                    
+                    if viewModel.isLoadingMore {
+                        VStack {
+                            ProgressView()
+                                .padding()
+                            Text("Loading more Pokemons...")
+                                .font(.caption)
+                                .foregroundColor(Color(uiColor: .secondaryLabel))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical)
+                    }
+                    
+                    GeometryReader { geometry in
+                        Color.clear
+                            .preference(key: ScrollOffsetPreferenceKey.self,
+                                      value: geometry.frame(in: .named("scroll")).minY)
+                    }
+                    .frame(height: 20)
+                }
+                .background(
+                    GeometryReader { geometry in
+                        Color.clear.onAppear {
+                            viewModel.scrollViewHeight = geometry.size.height
+                        }
+                    }
+                )
+                .coordinateSpace(name: "scroll")
+                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
+                    if offset * 0.8 < viewModel.scrollViewHeight && !viewModel.isLoadingMore {
+                        Task {
+                            await viewModel.loadMorePokemons()
+                        }
+                    }
+                }
+            }
+        }
+        .background(Color(uiColor: .systemGroupedBackground))
     }
 }
 
