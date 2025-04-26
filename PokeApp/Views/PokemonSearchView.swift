@@ -71,38 +71,3 @@ struct SearchBar: View {
     #endif
 }
 
-struct PokemonDetailView: View {
-    let pokemon: Pokemon
-    
-    var body: some View {
-        VStack(spacing: 20) {
-            AsyncImage(url: URL(string: pokemon.sprites.frontDefault)) { image in
-                image
-                    .resizable()
-                    .scaledToFit()
-            } placeholder: {
-                ProgressView()
-            }
-            .frame(width: 200, height: 200)
-            
-            Text(pokemon.name.capitalized)
-                .font(.title)
-            
-            HStack {
-                ForEach(pokemon.types, id: \.typeInfo.name) { type in
-                    Text(type.typeInfo.name.capitalized)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(Color.blue.opacity(0.2))
-                        .cornerRadius(10)
-                }
-            }
-        }
-        .padding()
-        .enableInjection()
-    }
-
-    #if DEBUG
-    @ObserveInjection var forceRedraw
-    #endif
-} 

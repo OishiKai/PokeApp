@@ -24,7 +24,9 @@ struct PokemonListView: View {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 16) {
                             ForEach(pokemons) { pokemon in
-                                PokemonGridItem(pokemon: pokemon)
+                                NavigationLink(destination: PokemonDetailView(pokemon: pokemon)) {
+                                    PokemonGridItem(pokemon: pokemon)
+                                }
                             }
                         }
                         .padding(16)
@@ -33,7 +35,7 @@ struct PokemonListView: View {
                             VStack {
                                 ProgressView()
                                     .padding()
-                                Text("次のポケモンをロード中...")
+                                Text("Loading more Pokemons...")
                                     .font(.caption)
                                     .foregroundColor(.gray)
                             }
@@ -139,6 +141,7 @@ struct PokemonGridItem: View {
             
             Text(pokemon.name.capitalized)
                 .font(.headline)
+                .foregroundColor(.black)
             
             HStack {
                 ForEach(pokemon.types, id: \.typeInfo.name) { type in
