@@ -30,14 +30,19 @@ struct ContentView: View {
                 }
                 ToolbarItem {
                     Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                        Label("Add Item", systemImage: "clock")
                     }
                 }
             }
         } detail: {
             Text("Select an item")
         }
+        .enableInjection()
     }
+
+    #if DEBUG
+    @ObserveInjection var forceRedraw
+    #endif
 
     private func addItem() {
         withAnimation {
