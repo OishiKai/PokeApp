@@ -99,15 +99,11 @@ struct PokemonListView: View {
             let startId = currentPage * 10 + 1
             let endId = startId + 9
             
-            print("新しいポケモンをロード中... (ID: \(startId) - \(endId))")
-            
             for id in startId...endId {
                 let pokemon = try await PokemonAPI.shared.searchPokemon(name: String(id))
                 pokemons.append(pokemon)
-                print("ロード完了: \(pokemon.name) (ID: \(pokemon.id))")
             }
             currentPage += 1
-            print("ページ \(currentPage) のロードが完了しました。現在のポケモン数: \(pokemons.count)")
         } catch {
             print("Failed to load more Pokemon: \(error)")
         }
