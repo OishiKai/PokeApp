@@ -25,7 +25,7 @@ struct PokeAppApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            PokemonSearchView()
         }
         .modelContainer(sharedModelContainer)
     }

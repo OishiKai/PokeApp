@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+このアプリはポケモンAPIを利用します。
+API通信の実装の際は、下記URLのドキュメントを参照し、仕様を確認してください。
+
+https://pokeapi.co/docs/v2
