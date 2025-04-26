@@ -1,10 +1,20 @@
 import Foundation
 
+// URLSessionProtocolの定義
+protocol URLSessionProtocol {
+    func data(from url: URL) async throws -> (Data, URLResponse)
+}
+
+extension URLSession: URLSessionProtocol { }
+
 class PokemonAPI {
     static let shared = PokemonAPI()
     private let baseURL = "https://pokeapi.co/api/v2"
     private var cache: [String: Pokemon] = [:]
     private var detailCache: [String: PokemonDetail] = [:]
+    
+    // テスト用にURLSessionを注入できるようにする
+    var session: URLSessionProtocol = URLSession.shared
     
     func searchPokemon(id: String) async throws -> Pokemon {
         // キャッシュに存在する場合はキャッシュから返す
@@ -14,12 +24,27 @@ class PokemonAPI {
         
         // キャッシュにない場合はAPIから取得
         let url = URL(string: "\(baseURL)/pokemon/\(id.lowercased())")!
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let pokemon = try JSONDecoder().decode(Pokemon.self, from: data)
+        let (data, response) = try await session.data(from: url)
         
-        // 取得したデータをキャッシュに保存
-        cache[id.lowercased()] = pokemon
-        return pokemon
+        // HTTPレスポンスのステータスコードをチェック
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+        
+        do {
+            let pokemon = try JSONDecoder().decode(Pokemon.self, from: data)
+            // 取得したデータをキャッシュに保存
+            cache[id.lowercased()] = pokemon
+            return pokemon
+        } catch let error as DecodingError {
+            throw APIError.decodingError(error)
+        } catch {
+            throw APIError.networkError(error)
+        }
     }
     
     func getPokemonDetail(id: String) async throws -> PokemonDetail {
@@ -31,7 +56,7 @@ class PokemonAPI {
         // キャッシュにない場合はAPIから取得
         let url = URL(string: "\(baseURL)/pokemon-species/\(id.lowercased())")!
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await session.data(from: url)
             
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw APIError.invalidResponse
