@@ -8,7 +8,7 @@ struct PokemonDetail: Codable {
     let growthRate: GrowthRate
     let flavorTextEntries: [FlavorTextEntry]
     let genera: [Genera]
-    let habitat: Habitat
+    let habitat: Habitat?
     let isLegendary: Bool
     let isMythical: Bool
     let shape: Shape

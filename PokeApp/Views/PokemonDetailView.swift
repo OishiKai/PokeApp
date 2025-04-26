@@ -58,7 +58,9 @@ struct PokemonDetailView: View {
                         }
                         
                         // 生息地
-                        DetailRow(title: "Habitat", value: detail.habitat.name)
+                        if let habitat = detail.habitat {
+                            DetailRow(title: "Habitat", value: habitat.name)
+                        }
                         
                         // 捕獲率
                         DetailRow(title: "Capture Rate", value: "\(detail.captureRate)%")
