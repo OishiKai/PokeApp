@@ -17,6 +17,10 @@ class PokemonListViewModel: ObservableObject {
         Pokedex.find(by: selectedPokedex)
     }
     
+    var currentPokedexName: String {
+        currentPokedex.name
+    }
+    
     func loadPokemons() async {
         isLoading = true
         currentPage = 1
@@ -63,27 +67,11 @@ class PokemonListViewModel: ObservableObject {
         
         isLoadingMore = false
     }
-    
-    func updateSelectedPokedex(_ newValue: Int) {
-        selectedPokedex = newValue
-    }
-    
-    var currentPokedexName: String {
-        currentPokedex.name
-    }
 }
 
 struct PokemonListView: View {
     @EnvironmentObject private var viewModel: PokemonListViewModel
     @AppStorage("selectedPokedex") private var selectedPokedex = 0
-    
-    private let columns = [
-        GridItem(.adaptive(minimum: 150), spacing: 16)
-    ]
-    
-    private var currentPokedex: Pokedex {
-        Pokedex.find(by: selectedPokedex)
-    }
     
     var body: some View {
         NavigationStack {
@@ -104,7 +92,6 @@ struct PokemonListView: View {
                 }
         }
         .onChange(of: selectedPokedex) { oldValue, newValue in
-            viewModel.updateSelectedPokedex(newValue)
             Task {
                 await viewModel.loadPokemons()
             }
