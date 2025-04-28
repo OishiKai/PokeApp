@@ -8,7 +8,6 @@ class PokemonListViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isLoadingMore = false
     @Published var currentPage = 1
-    @Published var scrollViewHeight: CGFloat = 0
     
     @AppStorage("itemsPerPage") private var itemsPerPage = 10
     @AppStorage("selectedPokedex") private var selectedPokedex = 0
@@ -104,6 +103,7 @@ struct PokemonListView: View {
 
 private struct PokemonListContent: View {
     @EnvironmentObject private var viewModel: PokemonListViewModel
+    @State private var scrollViewHeight: CGFloat = 0
     
     private let columns = [
         GridItem(.adaptive(minimum: 150), spacing: 16)
@@ -149,14 +149,15 @@ private struct PokemonListContent: View {
                 .background(
                     GeometryReader { geometry in
                         Color.clear.onAppear {
-                            viewModel.scrollViewHeight = geometry.size.height
+                            scrollViewHeight = geometry.size.height
                         }
                     }
                 )
                 .coordinateSpace(name: "scroll")
                 .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
-                    if offset * 0.8 < viewModel.scrollViewHeight && !viewModel.isLoadingMore {
-                        Task {
+                    if offset * 0.8 < scrollViewHeight {
+                        Task { @MainActor in
+                            guard !viewModel.isLoadingMore else { return }
                             await viewModel.loadMorePokemons()
                         }
                     }
