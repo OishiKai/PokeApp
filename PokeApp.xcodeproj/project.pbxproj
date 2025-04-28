@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2A6CA2532DBF65EE00FBEEC4 /* CachedAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6CA2512DBF65EE00FBEEC4 /* CachedAsyncImage.swift */; };
+		2A6CA2782DBF934800FBEEC4 /* OggDecoder in Frameworks */ = {isa = PBXBuildFile; productRef = 2A6CA2772DBF934800FBEEC4 /* OggDecoder */; };
 		2AB8D9662DBCC6640050F626 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AB8D95E2DBCC6640050F626 /* Assets.xcassets */; };
 		2AB8D9672DBCC6640050F626 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AB8D95A2DBCC6640050F626 /* Preview Assets.xcassets */; };
 		2AB8D9682DBCC6640050F626 /* PokeAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB8D9612DBCC6640050F626 /* PokeAppApp.swift */; };
@@ -71,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A6CA2782DBF934800FBEEC4 /* OggDecoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,6 +208,7 @@
 			);
 			name = PokeApp;
 			packageProductDependencies = (
+				2A6CA2772DBF934800FBEEC4 /* OggDecoder */,
 			);
 			productName = PokeApp;
 			productReference = 2A8D37792DBCBD8300C63668 /* PokeApp.app */;
@@ -292,6 +295,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				2AB8D9492DBCC02D0050F626 /* XCRemoteSwiftPackageReference "Inject" */,
+				2A6CA2762DBF934800FBEEC4 /* XCRemoteSwiftPackageReference "OggDecoder" */,
 			);
 			productRefGroup = 2A8D377A2DBCBD8300C63668 /* Products */;
 			projectDirPath = "";
@@ -704,6 +708,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2A6CA2762DBF934800FBEEC4 /* XCRemoteSwiftPackageReference "OggDecoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/arkasas/OggDecoder.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		2AB8D9492DBCC02D0050F626 /* XCRemoteSwiftPackageReference "Inject" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzysztofzablocki/Inject.git";
@@ -713,6 +725,14 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2A6CA2772DBF934800FBEEC4 /* OggDecoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A6CA2762DBF934800FBEEC4 /* XCRemoteSwiftPackageReference "OggDecoder" */;
+			productName = OggDecoder;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2A8D37712DBCBD8300C63668 /* Project object */;
 }

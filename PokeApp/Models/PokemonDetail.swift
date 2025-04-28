@@ -3,86 +3,50 @@ import Foundation
 struct PokemonDetail: Codable {
     let id: Int
     let name: String
-    let baseHappiness: Int
-    let captureRate: Int
-    let growthRate: GrowthRate
-    let flavorTextEntries: [FlavorTextEntry]
-    let genera: [Genera]
-    let habitat: Habitat?
-    let isLegendary: Bool
-    let isMythical: Bool
-    let shape: Shape
-    let varieties: [Variety]
+    let baseExperience: Int?
+    let height: Int
+    let weight: Int
+    let sprites: Sprites
+    let types: [PokemonType]
+    let cries: Cries
     
     enum CodingKeys: String, CodingKey {
         case id
         case name
-        case baseHappiness = "base_happiness"
-        case captureRate = "capture_rate"
-        case growthRate = "growth_rate"
-        case flavorTextEntries = "flavor_text_entries"
-        case genera
-        case habitat
-        case isLegendary = "is_legendary"
-        case isMythical = "is_mythical"
-        case shape
-        case varieties
+        case baseExperience = "base_experience"
+        case height
+        case weight
+        case sprites
+        case types
+        case cries
     }
     
-    struct GrowthRate: Codable {
-        let name: String
-        let url: String
-    }
-    
-    struct FlavorTextEntry: Codable {
-        let flavorText: String
-        let language: Language
-        let version: Version
+    struct Sprites: Codable {
+        let frontDefault: String
+        let backDefault: String?
+        let frontShiny: String?
+        let backShiny: String?
         
         enum CodingKeys: String, CodingKey {
-            case flavorText = "flavor_text"
-            case language
-            case version
+            case frontDefault = "front_default"
+            case backDefault = "back_default"
+            case frontShiny = "front_shiny"
+            case backShiny = "back_shiny"
         }
     }
     
-    struct Language: Codable {
-        let name: String
-        let url: String
-    }
-    
-    struct Version: Codable {
-        let name: String
-        let url: String
-    }
-    
-    struct Genera: Codable {
-        let genus: String
-        let language: Language
-    }
-    
-    struct Habitat: Codable {
-        let name: String
-        let url: String
-    }
-    
-    struct Shape: Codable {
-        let name: String
-        let url: String
-    }
-    
-    struct Variety: Codable {
-        let isDefault: Bool
-        let pokemon: PokemonReference
+    struct PokemonType: Codable {
+        let slot: Int
+        let type: TypeInfo
         
-        enum CodingKeys: String, CodingKey {
-            case isDefault = "is_default"
-            case pokemon
+        struct TypeInfo: Codable {
+            let name: String
+            let url: String
         }
     }
     
-    struct PokemonReference: Codable {
-        let name: String
-        let url: String
+    struct Cries: Codable {
+        let latest: String
+        let legacy: String?
     }
 } 

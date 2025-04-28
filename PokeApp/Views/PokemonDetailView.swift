@@ -1,4 +1,5 @@
 import SwiftUI
+import AVFoundation
 
 struct PokemonDetailView: View {
     let pokemon: Pokemon
@@ -6,12 +7,13 @@ struct PokemonDetailView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var isPlaying = false
+    @State private var player: AVPlayer?
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 // ポケモンの画像
-                AsyncImage(url: URL(string: pokemon.sprites.frontDefault)) { image in
+                AsyncImage(url: URL(string: detail?.sprites.frontDefault ?? pokemon.sprites.frontDefault)) { image in
                     image
                         .resizable()
                         .scaledToFit()
@@ -27,11 +29,11 @@ struct PokemonDetailView: View {
                 
                 // タイプ
                 HStack {
-                    ForEach(pokemon.types, id: \.typeInfo.name) { type in
-                        Text(type.typeInfo.name.capitalized)
+                    ForEach(detail?.types ?? [], id: \.type.name) { type in
+                        Text(type.type.name.capitalized)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 5)
-                            .background(PokemonTypeColor.color(for: type.typeInfo.name))
+                            .background(PokemonTypeColor.color(for: type.type.name))
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
@@ -45,42 +47,11 @@ struct PokemonDetailView: View {
                 } else if let detail = detail {
                     // 詳細情報
                     VStack(alignment: .leading, spacing: 15) {
-                        // 説明文
-                        if let description = detail.flavorTextEntries.first(where: { $0.language.name == "en" })?.flavorText {
-                            Text(description.replacingOccurrences(of: "\n", with: " "))
-                                .fixedSize(horizontal: false, vertical: true)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding()
-                                .background(Color(uiColor: .systemGroupedBackground))
-                                .cornerRadius(10)
-                        }
-                        
-                        // 分類
-                        if let genus = detail.genera.first(where: { $0.language.name == "en" })?.genus {
-                            DetailRow(title: "Category", value: genus)
-                        }
-                        
-                        // 生息地
-                        if let habitat = detail.habitat {
-                            DetailRow(title: "Habitat", value: habitat.name)
-                        }
-                        
-                        // 捕獲率
-                        DetailRow(title: "Capture Rate", value: "\(detail.captureRate)%")
-                        
-                        // 成長速度
-                        DetailRow(title: "Growth Rate", value: detail.growthRate.name)
-                        
-                        // 伝説/幻のポケモン
-                        if detail.isLegendary {
-                            Text("Legendary Pokemon")
-                                .foregroundColor(Color(uiColor: .systemOrange))
-                                .padding(.top)
-                        }
-                        if detail.isMythical {
-                            Text("Mythical Pokemon")
-                                .foregroundColor(Color(uiColor: .systemPurple))
-                                .padding(.top)
+                        // 基本情報
+                        DetailRow(title: "Height", value: "\(Double(detail.height) / 10.0)m")
+                        DetailRow(title: "Weight", value: "\(Double(detail.weight) / 10.0)kg")
+                        if let baseExp = detail.baseExperience {
+                            DetailRow(title: "Base Experience", value: "\(baseExp)")
                         }
                     }
                     .padding()
@@ -92,8 +63,12 @@ struct PokemonDetailView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
+                    if isPlaying {
+                        player?.pause()
+                    } else if let cryUrl = detail?.cries.latest {
+                        playCry(url: cryUrl)
+                    }
                     isPlaying.toggle()
-                    // TODO: 鳴き声の再生処理を実装
                 }) {
                     Image(systemName: isPlaying ? "stop.circle.fill" : "play.circle.fill")
                         .foregroundColor(isPlaying ? .red : .blue)
@@ -118,5 +93,18 @@ struct PokemonDetailView: View {
         }
         
         isLoading = false
+    }
+    
+    private func playCry(url: String) {
+        guard let audioUrl = URL(string: url) else { return }
+        
+        print("audioUrl: \(audioUrl)")
+        player = AVPlayer(url: audioUrl)
+        player?.play()
+        
+        // 再生が終了したら再生状態をリセット
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: .main) { _ in
+            isPlaying = false
+        }
     }
 }
