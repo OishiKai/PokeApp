@@ -1,17 +1,21 @@
 import SwiftUI
 import Foundation
 
+/// ポケモン一覧画面の状態を管理するViewModel
 @MainActor
 class PokemonListViewModel: ObservableObject {
+    // MARK: - Published Properties
     @Published var pokemons: [Pokemon] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var isLoadingMore = false
     @Published var currentPage = 1
     
+    // MARK: - AppStorage Properties
     @AppStorage("itemsPerPage") private var itemsPerPage = 10
     @AppStorage("selectedPokedex") private var selectedPokedex = 0
     
+    // MARK: - Computed Properties
     private var currentPokedex: Pokedex {
         Pokedex.find(by: selectedPokedex)
     }
@@ -20,6 +24,8 @@ class PokemonListViewModel: ObservableObject {
         currentPokedex.name
     }
     
+    // MARK: - Public Methods
+    /// ポケモンの一覧を読み込む
     func loadPokemons() async {
         isLoading = true
         currentPage = 1
@@ -42,6 +48,7 @@ class PokemonListViewModel: ObservableObject {
         isLoading = false
     }
     
+    /// 追加のポケモンを読み込む
     func loadMorePokemons() async {
         guard !isLoadingMore else { return }
         isLoadingMore = true
@@ -68,7 +75,9 @@ class PokemonListViewModel: ObservableObject {
     }
 }
 
+/// ポケモン一覧のメインビュー
 struct PokemonListView: View {
+    // MARK: - Properties
     @EnvironmentObject private var viewModel: PokemonListViewModel
     @AppStorage("selectedPokedex") private var selectedPokedex = 0
     
@@ -101,7 +110,9 @@ struct PokemonListView: View {
     }
 }
 
+/// ポケモン一覧のコンテンツビュー
 private struct PokemonListContent: View {
+    // MARK: - Properties
     @EnvironmentObject private var viewModel: PokemonListViewModel
     @State private var scrollViewHeight: CGFloat = 0
     
@@ -112,15 +123,18 @@ private struct PokemonListContent: View {
     var body: some View {
         VStack {
             if viewModel.isLoading {
+                // ローディング表示
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(uiColor: .systemGroupedBackground))
             } else if let error = viewModel.errorMessage {
+                // エラー表示
                 Text(error)
                     .foregroundColor(Color(uiColor: .systemRed))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(uiColor: .systemGroupedBackground))
             } else {
+                // ポケモン一覧表示
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(viewModel.pokemons) { pokemon in
@@ -131,6 +145,7 @@ private struct PokemonListContent: View {
                     }
                     .padding(16)
                     
+                    // 追加ローディング表示
                     if viewModel.isLoadingMore {
                         VStack {
                             ProgressView()
@@ -143,6 +158,7 @@ private struct PokemonListContent: View {
                         .padding(.vertical)
                     }
                     
+                    // スクロール位置の監視用GeometryReader
                     GeometryReader { geometry in
                         Color.clear
                             .preference(key: ScrollOffsetPreferenceKey.self,
@@ -159,6 +175,7 @@ private struct PokemonListContent: View {
                 )
                 .coordinateSpace(name: "scroll")
                 .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
+                    // スクロール位置に応じて追加読み込み
                     if offset * 0.8 < scrollViewHeight {
                         Task { @MainActor in
                             guard !viewModel.isLoadingMore else { return }
@@ -172,6 +189,7 @@ private struct PokemonListContent: View {
     }
 }
 
+/// スクロール位置の監視用PreferenceKey
 struct ScrollOffsetPreferenceKey: PreferenceKey {
     static var defaultValue: CGFloat = 0
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
@@ -179,11 +197,13 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
     }
 }
 
+/// ポケモンのグリッドアイテムビュー
 struct PokemonGridItem: View {
     let pokemon: Pokemon
     
     var body: some View {
         VStack {
+            // ポケモンの画像
             AsyncImage(url: URL(string: pokemon.sprites.frontDefault)) { image in
                 image
                     .resizable()
@@ -193,14 +213,17 @@ struct PokemonGridItem: View {
             }
             .frame(width: 80, height: 80)
             
+            // ポケモンのID
             Text("#\(pokemon.id)")
                 .font(.caption)
                 .foregroundColor(Color(uiColor: .secondaryLabel))
             
+            // ポケモンの名前
             Text(pokemon.name.capitalized)
                 .font(.headline)
                 .foregroundColor(Color(uiColor: .label))
             
+            // ポケモンのタイプ
             HStack {
                 ForEach(pokemon.types, id: \.typeInfo.name) { type in
                     Text(type.typeInfo.name.capitalized)
