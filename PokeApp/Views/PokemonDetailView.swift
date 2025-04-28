@@ -14,6 +14,7 @@ struct PokemonDetailView: View {
                     image
                         .resizable()
                         .scaledToFit()
+                        .frame(width: 200, height: 200)
                 } placeholder: {
                     ProgressView()
                 }
@@ -47,6 +48,7 @@ struct PokemonDetailView: View {
                         if let description = detail.flavorTextEntries.first(where: { $0.language.name == "en" })?.flavorText {
                             Text(description.replacingOccurrences(of: "\n", with: " "))
                                 .fixedSize(horizontal: false, vertical: true)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding()
                                 .background(Color(uiColor: .systemGroupedBackground))
                                 .cornerRadius(10)

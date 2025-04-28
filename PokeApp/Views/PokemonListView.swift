@@ -204,10 +204,11 @@ struct PokemonGridItem: View {
     var body: some View {
         VStack {
             // ポケモンの画像
-            AsyncImage(url: URL(string: pokemon.sprites.frontDefault)) { image in
+            CachedAsyncImage(url: URL(string: pokemon.sprites.frontDefault)!) { image in
                 image
                     .resizable()
                     .scaledToFit()
+                    .frame(width: 80, height: 80)
             } placeholder: {
                 ProgressView()
             }
