@@ -5,6 +5,7 @@ struct PokemonDetailView: View {
     @State private var detail: PokemonDetail?
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var isPlaying = false
     
     var body: some View {
         ScrollView {
@@ -88,6 +89,17 @@ struct PokemonDetailView: View {
             .padding()
         }
         .navigationTitle(pokemon.name.capitalized)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    isPlaying.toggle()
+                    // TODO: 鳴き声の再生処理を実装
+                }) {
+                    Image(systemName: isPlaying ? "stop.circle.fill" : "play.circle.fill")
+                        .foregroundColor(isPlaying ? .red : .blue)
+                }
+            }
+        }
         .task {
             await loadDetail()
         }
