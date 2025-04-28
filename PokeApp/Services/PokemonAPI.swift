@@ -54,7 +54,7 @@ class PokemonAPI {
         }
         
         // キャッシュにない場合はAPIから取得
-        let url = URL(string: "\(baseURL)/pokemon-species/\(id.lowercased())")!
+        let url = URL(string: "\(baseURL)/pokemon/\(id.lowercased())")!
         do {
             let (data, response) = try await session.data(from: url)
             
