@@ -68,12 +68,16 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2A8D378E2DBCBD8400C63668 /* PokeAppTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
+			isa = PBXGroup;
+			children = (
+			);
 			path = PokeAppTests;
 			sourceTree = "<group>";
 		};
 		2A8D37982DBCBD8400C63668 /* PokeAppUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
+			isa = PBXGroup;
+			children = (
+			);
 			path = PokeAppUITests;
 			sourceTree = "<group>";
 		};
@@ -188,6 +192,20 @@
 			path = PokeApp;
 			sourceTree = "<group>";
 		};
+		2A8D378E2DBCBD8400C63668 /* PokeAppTests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = PokeAppTests;
+			sourceTree = "<group>";
+		};
+		2A8D37982DBCBD8400C63668 /* PokeAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = PokeAppUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -291,7 +309,7 @@
 			packageReferences = (
 				2AB8D9492DBCC02D0050F626 /* XCRemoteSwiftPackageReference "Inject" */,
 			);
-			preferredProjectObjectVersion = 77;
+			preferredProjectObjectVersion = 56;
 			productRefGroup = 2A8D377A2DBCBD8300C63668 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
