@@ -113,9 +113,13 @@ private struct PokemonListContent: View {
         VStack {
             if viewModel.isLoading {
                 ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(uiColor: .systemGroupedBackground))
             } else if let error = viewModel.errorMessage {
                 Text(error)
                     .foregroundColor(Color(uiColor: .systemRed))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(uiColor: .systemGroupedBackground))
             } else {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 16) {
