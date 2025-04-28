@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import OggDecoder
 
 struct PokemonDetailView: View {
     let pokemon: Pokemon
@@ -8,6 +9,7 @@ struct PokemonDetailView: View {
     @State private var errorMessage: String?
     @State private var isPlaying = false
     @State private var player: AVPlayer?
+    @State private var isConverting = false
     
     var body: some View {
         ScrollView {
@@ -70,9 +72,14 @@ struct PokemonDetailView: View {
                     }
                     isPlaying.toggle()
                 }) {
-                    Image(systemName: isPlaying ? "stop.circle.fill" : "play.circle.fill")
-                        .foregroundColor(isPlaying ? .red : .blue)
+                    if isConverting {
+                        ProgressView()
+                    } else {
+                        Image(systemName: isPlaying ? "stop.circle.fill" : "play.circle.fill")
+                            .foregroundColor(isPlaying ? .red : .blue)
+                    }
                 }
+                .disabled(isConverting)
             }
         }
         .task {
@@ -96,15 +103,42 @@ struct PokemonDetailView: View {
     }
     
     private func playCry(url: String) {
+        // URLをそのまま使用
         guard let audioUrl = URL(string: url) else { return }
         
-        print("audioUrl: \(audioUrl)")
-        player = AVPlayer(url: audioUrl)
-        player?.play()
+        isConverting = true
         
-        // 再生が終了したら再生状態をリセット
-        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: .main) { _ in
-            isPlaying = false
+        // 一時ファイルのURLを作成
+        let tempDir = FileManager.default.temporaryDirectory
+        let oggUrl = tempDir.appendingPathComponent("\(pokemon.id)_cry.ogg")
+        let wavUrl = tempDir.appendingPathComponent("\(pokemon.id)_cry.wav")
+        
+        // URLからデータをダウンロード
+        Task {
+            do {
+                let (data, _) = try await URLSession.shared.data(from: audioUrl)
+                try data.write(to: oggUrl)
+                
+                // OggDecoderを使用して変換
+                let decoder = OGGDecoder()
+                decoder.decode(oggUrl, into: wavUrl) { success in
+                    if success {
+                        player = AVPlayer(url: wavUrl)
+                        player?.play()
+                        
+                        // 再生が終了したら再生状態をリセット
+                        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: .main) { _ in
+                            isPlaying = false
+                        }
+                    } else {
+                        print("Failed to convert ogg file")
+                    }
+                    isConverting = false
+                }
+            } catch {
+                print("Failed to download ogg file: \(error)")
+                isConverting = false
+            }
         }
     }
 }
