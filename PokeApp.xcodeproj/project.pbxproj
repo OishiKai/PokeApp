@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -66,23 +66,6 @@
 		2AB8D99E2DBD0F920050F626 /* Pokedex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pokedex.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		2A8D378E2DBCBD8400C63668 /* PokeAppTests */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = PokeAppTests;
-			sourceTree = "<group>";
-		};
-		2A8D37982DBCBD8400C63668 /* PokeAppUITests */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = PokeAppUITests;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		2A8D37762DBCBD8300C63668 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -134,6 +117,20 @@
 				2A8D37952DBCBD8400C63668 /* PokeAppUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2A8D378E2DBCBD8400C63668 /* PokeAppTests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = PokeAppTests;
+			sourceTree = "<group>";
+		};
+		2A8D37982DBCBD8400C63668 /* PokeAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = PokeAppUITests;
 			sourceTree = "<group>";
 		};
 		2AB8D9592DBCC6640050F626 /* Models */ = {
@@ -190,20 +187,6 @@
 				2AB8D9612DBCC6640050F626 /* PokeAppApp.swift */,
 			);
 			path = PokeApp;
-			sourceTree = "<group>";
-		};
-		2A8D378E2DBCBD8400C63668 /* PokeAppTests */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = PokeAppTests;
-			sourceTree = "<group>";
-		};
-		2A8D37982DBCBD8400C63668 /* PokeAppUITests */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = PokeAppUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -298,6 +281,7 @@
 				};
 			};
 			buildConfigurationList = 2A8D37742DBCBD8300C63668 /* Build configuration list for PBXProject "PokeApp" */;
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -309,7 +293,6 @@
 			packageReferences = (
 				2AB8D9492DBCC02D0050F626 /* XCRemoteSwiftPackageReference "Inject" */,
 			);
-			preferredProjectObjectVersion = 56;
 			productRefGroup = 2A8D377A2DBCBD8300C63668 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -546,6 +529,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -585,6 +569,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
