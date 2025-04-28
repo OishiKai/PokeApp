@@ -121,20 +121,17 @@ struct PokemonDetailView: View {
                 
                 // OggDecoderを使用して変換
                 let decoder = OGGDecoder()
-                decoder.decode(oggUrl, into: wavUrl) { success in
-                    if success {
-                        player = AVPlayer(url: wavUrl)
-                        player?.play()
-                        
-                        // 再生が終了したら再生状態をリセット
-                        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: .main) { _ in
-                            isPlaying = false
-                        }
-                    } else {
-                        print("Failed to convert ogg file")
-                    }
-                    isConverting = false
+                
+                await decoder.decode(oggUrl, into: wavUrl)
+                player = AVPlayer(url: wavUrl)
+                player?.play()
+                
+                // 再生が終了したら再生状態をリセット
+                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: .main) { _ in
+                    isPlaying = false
                 }
+                
+                isConverting = false
             } catch {
                 print("Failed to download ogg file: \(error)")
                 isConverting = false
