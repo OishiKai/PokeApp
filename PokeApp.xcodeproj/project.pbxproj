@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A541D852DC0CE1A00B1A17A /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2A541D842DC0CE1A00B1A17A /* AudioKit */; };
 		2A6CA2532DBF65EE00FBEEC4 /* CachedAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6CA2512DBF65EE00FBEEC4 /* CachedAsyncImage.swift */; };
 		2AB8D9662DBCC6640050F626 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AB8D95E2DBCC6640050F626 /* Assets.xcassets */; };
 		2AB8D9672DBCC6640050F626 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AB8D95A2DBCC6640050F626 /* Preview Assets.xcassets */; };
@@ -71,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A541D852DC0CE1A00B1A17A /* AudioKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +209,7 @@
 			);
 			name = PokeApp;
 			packageProductDependencies = (
+				2A541D842DC0CE1A00B1A17A /* AudioKit */,
 			);
 			productName = PokeApp;
 			productReference = 2A8D37792DBCBD8300C63668 /* PokeApp.app */;
@@ -293,6 +296,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				2AB8D9492DBCC02D0050F626 /* XCRemoteSwiftPackageReference "Inject" */,
+				2A541D832DC0CE1A00B1A17A /* XCRemoteSwiftPackageReference "AudioKit" */,
 			);
 			productRefGroup = 2A8D377A2DBCBD8300C63668 /* Products */;
 			projectDirPath = "";
@@ -705,6 +709,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2A541D832DC0CE1A00B1A17A /* XCRemoteSwiftPackageReference "AudioKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AudioKit/AudioKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.6.5;
+			};
+		};
 		2AB8D9492DBCC02D0050F626 /* XCRemoteSwiftPackageReference "Inject" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzysztofzablocki/Inject.git";
@@ -714,6 +726,14 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2A541D842DC0CE1A00B1A17A /* AudioKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A541D832DC0CE1A00B1A17A /* XCRemoteSwiftPackageReference "AudioKit" */;
+			productName = AudioKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2A8D37712DBCBD8300C63668 /* Project object */;
 }
