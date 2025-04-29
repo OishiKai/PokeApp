@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A541D882DC0D03900B1A17A /* VLCKitSPM in Frameworks */ = {isa = PBXBuildFile; productRef = 2A541D872DC0D03900B1A17A /* VLCKitSPM */; };
 		2A6CA2532DBF65EE00FBEEC4 /* CachedAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6CA2512DBF65EE00FBEEC4 /* CachedAsyncImage.swift */; };
-		2A6CA2782DBF934800FBEEC4 /* OggDecoder in Frameworks */ = {isa = PBXBuildFile; productRef = 2A6CA2772DBF934800FBEEC4 /* OggDecoder */; };
 		2AB8D9662DBCC6640050F626 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AB8D95E2DBCC6640050F626 /* Assets.xcassets */; };
 		2AB8D9672DBCC6640050F626 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AB8D95A2DBCC6640050F626 /* Preview Assets.xcassets */; };
 		2AB8D9682DBCC6640050F626 /* PokeAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB8D9612DBCC6640050F626 /* PokeAppApp.swift */; };
@@ -72,7 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A6CA2782DBF934800FBEEC4 /* OggDecoder in Frameworks */,
+				2A541D882DC0D03900B1A17A /* VLCKitSPM in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +110,7 @@
 				2A8D377A2DBCBD8300C63668 /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 0;
 		};
 		2A8D377A2DBCBD8300C63668 /* Products */ = {
 			isa = PBXGroup;
@@ -208,7 +209,7 @@
 			);
 			name = PokeApp;
 			packageProductDependencies = (
-				2A6CA2772DBF934800FBEEC4 /* OggDecoder */,
+				2A541D872DC0D03900B1A17A /* VLCKitSPM */,
 			);
 			productName = PokeApp;
 			productReference = 2A8D37792DBCBD8300C63668 /* PokeApp.app */;
@@ -295,7 +296,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				2AB8D9492DBCC02D0050F626 /* XCRemoteSwiftPackageReference "Inject" */,
-				2A6CA2762DBF934800FBEEC4 /* XCRemoteSwiftPackageReference "OggDecoder" */,
+				2A541D862DC0D03900B1A17A /* XCRemoteSwiftPackageReference "vlckit-spm" */,
 			);
 			productRefGroup = 2A8D377A2DBCBD8300C63668 /* Products */;
 			projectDirPath = "";
@@ -522,7 +523,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"PokeApp/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = U5Z5BHBQ25;
@@ -533,7 +534,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -562,7 +563,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"PokeApp/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = U5Z5BHBQ25;
@@ -573,7 +574,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -708,12 +709,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2A6CA2762DBF934800FBEEC4 /* XCRemoteSwiftPackageReference "OggDecoder" */ = {
+		2A541D862DC0D03900B1A17A /* XCRemoteSwiftPackageReference "vlckit-spm" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/arkasas/OggDecoder.git";
+			repositoryURL = "https://github.com/tylerjonesio/vlckit-spm";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.6.0;
 			};
 		};
 		2AB8D9492DBCC02D0050F626 /* XCRemoteSwiftPackageReference "Inject" */ = {
@@ -727,10 +728,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2A6CA2772DBF934800FBEEC4 /* OggDecoder */ = {
+		2A541D872DC0D03900B1A17A /* VLCKitSPM */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2A6CA2762DBF934800FBEEC4 /* XCRemoteSwiftPackageReference "OggDecoder" */;
-			productName = OggDecoder;
+			package = 2A541D862DC0D03900B1A17A /* XCRemoteSwiftPackageReference "vlckit-spm" */;
+			productName = VLCKitSPM;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

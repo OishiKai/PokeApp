@@ -1,6 +1,6 @@
 import SwiftUI
 import AVFoundation
-import OggDecoder
+import VLCKitSPM
 
 struct PokemonDetailView: View {
     let pokemon: Pokemon
@@ -8,7 +8,7 @@ struct PokemonDetailView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var isPlaying = false
-    @State private var player: AVPlayer?
+    @State private var player: VLCMediaPlayer?
     @State private var isConverting = false
     
     var body: some View {
@@ -66,7 +66,7 @@ struct PokemonDetailView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
                     if isPlaying {
-                        player?.pause()
+                        player?.stop()
                     } else if let cryUrl = detail?.cries.latest {
                         playCry(url: cryUrl)
                     }
@@ -103,39 +103,27 @@ struct PokemonDetailView: View {
     }
     
     private func playCry(url: String) {
-        // URLをそのまま使用
         guard let audioUrl = URL(string: url) else { return }
         
         isConverting = true
         
-        // 一時ファイルのURLを作成
-        let tempDir = FileManager.default.temporaryDirectory
-        let oggUrl = tempDir.appendingPathComponent("\(pokemon.id)_cry.ogg")
-        let wavUrl = tempDir.appendingPathComponent("\(pokemon.id)_cry.wav")
+        // VLCMediaPlayerの初期化
+        player = VLCMediaPlayer()
+        player?.media = VLCMedia(url: audioUrl)
         
-        // URLからデータをダウンロード
-        Task {
-            do {
-                let (data, _) = try await URLSession.shared.data(from: audioUrl)
-                try data.write(to: oggUrl)
-                
-                // OggDecoderを使用して変換
-                let decoder = OGGDecoder()
-                
-                await decoder.decode(oggUrl, into: wavUrl)
-                player = AVPlayer(url: wavUrl)
-                player?.play()
-                
-                // 再生が終了したら再生状態をリセット
-                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: .main) { _ in
-                    isPlaying = false
-                }
-                
-                isConverting = false
-            } catch {
-                print("Failed to download ogg file: \(error)")
-                isConverting = false
+        // 再生終了時の通知を設定
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name(rawValue: "VLCMediaPlayerStateChanged"),
+            object: player,
+            queue: .main
+        ) { _ in
+            if self.player?.state == .ended || self.player?.state == .error {
+                self.isPlaying = false
             }
         }
+        
+        // 再生開始
+        player?.play()
+        isConverting = false
     }
 }
