@@ -45,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2A2024422DC0D8BB004EBC2F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2A6CA2512DBF65EE00FBEEC4 /* CachedAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedAsyncImage.swift; sourceTree = "<group>"; };
 		2A8D37792DBCBD8300C63668 /* PokeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PokeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A8D378B2DBCBD8400C63668 /* PokeAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PokeAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -180,6 +181,7 @@
 		2AB8D9652DBCC6640050F626 /* PokeApp */ = {
 			isa = PBXGroup;
 			children = (
+				2A2024422DC0D8BB004EBC2F /* Info.plist */,
 				2AB8D9592DBCC6640050F626 /* Models */,
 				2AB8D95B2DBCC6640050F626 /* Preview Content */,
 				2AB8D95C2DBCC6640050F626 /* Services */,
@@ -529,6 +531,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = U5Z5BHBQ25;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PokeApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -569,6 +572,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = U5Z5BHBQ25;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PokeApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
