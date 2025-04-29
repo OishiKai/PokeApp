@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import VLCKitSPM
 
 struct PokemonDetailView: View {
     let pokemon: Pokemon
@@ -7,7 +8,7 @@ struct PokemonDetailView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var isPlaying = false
-    @State private var player: AVPlayer?
+    @State private var player: VLCMediaPlayer?
     @State private var isConverting = false
     
     var body: some View {
@@ -65,7 +66,7 @@ struct PokemonDetailView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
                     if isPlaying {
-                        player?.pause()
+                        player?.stop()
                     } else if let cryUrl = detail?.cries.latest {
                         playCry(url: cryUrl)
                     }
@@ -102,7 +103,27 @@ struct PokemonDetailView: View {
     }
     
     private func playCry(url: String) {
-        // 一時的に機能を無効化
-        print("鳴き声再生機能は現在利用できません")
+        guard let audioUrl = URL(string: url) else { return }
+        
+        isConverting = true
+        
+        // VLCMediaPlayerの初期化
+        player = VLCMediaPlayer()
+        player?.media = VLCMedia(url: audioUrl)
+        
+        // 再生終了時の通知を設定
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name(rawValue: "VLCMediaPlayerStateChanged"),
+            object: player,
+            queue: .main
+        ) { _ in
+            if self.player?.state == .ended || self.player?.state == .error {
+                self.isPlaying = false
+            }
+        }
+        
+        // 再生開始
+        player?.play()
+        isConverting = false
     }
 }

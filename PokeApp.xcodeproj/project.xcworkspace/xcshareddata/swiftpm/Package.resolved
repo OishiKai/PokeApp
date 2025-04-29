@@ -1,15 +1,6 @@
 {
-  "originHash" : "ba9aa59f738dcb592d0d5a682b144fc068799eeb8bb0d34f5cbf055d0f2634a0",
+  "originHash" : "15b9c9c227d7fc83b5636c53985db244b6c90ded129e75281d9c851b649f74e7",
   "pins" : [
-    {
-      "identity" : "audiokit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/AudioKit/AudioKit.git",
-      "state" : {
-        "revision" : "5b3fd238ef8ee95c9842ca4ea83ca58ee151e630",
-        "version" : "5.6.5"
-      }
-    },
     {
       "identity" : "inject",
       "kind" : "remoteSourceControl",
@@ -17,6 +8,15 @@
       "state" : {
         "revision" : "728c56639ecb3df441d51d5bc6747329afabcfc9",
         "version" : "1.5.2"
+      }
+    },
+    {
+      "identity" : "vlckit-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tylerjonesio/vlckit-spm",
+      "state" : {
+        "revision" : "e932bbd488872fdb74f6654d28c2f291eae03daf",
+        "version" : "3.6.0"
       }
     }
   ],
